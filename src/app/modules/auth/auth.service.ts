@@ -71,7 +71,7 @@ const loginUser = async (user: IUser): Promise<ILoginUserResponse> => {
 
 const getUser = async (user: JwtPayload): Promise<IUser | null> => {
   const { userId } = user;
-  const result = await User.findById({ _id: userId });
+  const result = await User.findById({ _id: userId }, { password: 0 });
 
   return result;
 };
