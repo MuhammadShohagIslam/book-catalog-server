@@ -14,7 +14,7 @@ const createUserZodSchema = z.object({
     }),
     role: z.enum([...userRoleFields] as [string, ...string[]], {
       required_error: 'Role is required!',
-    }),
+    }).optional(),
   }),
 });
 

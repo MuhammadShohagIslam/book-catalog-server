@@ -46,7 +46,7 @@ userSchema.pre('save', async function (next) {
 userSchema.statics.isUserExit = async function (
   email: string
 ): Promise<Pick<IUser, '_id' | 'password' | 'role' | 'name' | 'email'> | null> {
-  return await User.findOne({ email: email }, { password: 1, role: 1 });
+  return await User.findOne({ email: email });
 };
 
 userSchema.statics.isPasswordMatched = async function (

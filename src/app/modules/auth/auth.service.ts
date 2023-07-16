@@ -10,7 +10,7 @@ import { ILoginUserResponse } from '../../../interfaces/common';
 
 const createUser = async (user: IUser): Promise<ILoginUserResponse | null> => {
   // check user already exit, if exit return error
-  const isUserExit = await User.isUserExit(user.email);
+  const isUserExit = await User.findOne({email: user?.email});
   if (isUserExit) {
     throw new ApiError(httpStatus.CONFLICT, 'User already exit!');
   }
@@ -21,11 +21,12 @@ const createUser = async (user: IUser): Promise<ILoginUserResponse | null> => {
   if (!result) {
     throw new ApiError(400, 'Failed to create user!');
   }
+
   const accessToken = jwtHelpers.createToken(
     {
-      userId: isUserExit!._id,
-      email: isUserExit!.email,
-      role: isUserExit!.role,
+      userId: result._id,
+      email: result.email,
+      role: result.role,
     },
     config.jwt_secret as Secret,
     config.jwt_expire_in as string
