@@ -5,13 +5,13 @@ const createBookZodSchema = z.object({
     title: z.string({
       required_error: 'Title is required!',
     }),
-    genre: z.number({
+    genre: z.string({
       required_error: 'Genre is required!',
     }),
-    author: z.number({
+    author: z.string({
       required_error: 'Author is required!',
     }),
-    publicationDate: z.date({
+    publicationDate: z.string({
       required_error: 'Publication Date is required!',
     }),
     reviews: z
@@ -27,9 +27,9 @@ const createBookZodSchema = z.object({
 const updateBookZodSchema = z.object({
   body: z.object({
     title: z.string().optional(),
-    genre: z.number().optional(),
-    author: z.number().optional(),
-    publicationDate: z.date().optional(),
+    genre: z.string().optional(),
+    author: z.string().optional(),
+    publicationDate: z.string().optional(),
     reviews: z.object({
       name: z.string().optional(),
       email: z.string().optional(),
