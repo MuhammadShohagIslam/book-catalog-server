@@ -79,8 +79,9 @@ const updateBook: RequestHandler = catchAsync(
 
 const deleteBook: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
+    const userData = req.user as JwtPayload;
     const id = req.params.id;
-    const result = await BookService.deleteBook(id);
+    const result = await BookService.deleteBook(userData, id);
     responseReturn<IBook | null>(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -92,8 +93,13 @@ const deleteBook: RequestHandler = catchAsync(
 
 /* Review Controller Start */
 const createBookReview = catchAsync(async (req: Request, res: Response) => {
+  const userData = req.user as JwtPayload;
   const { bookId, ...reviewData } = req.body;
-  const result = await BookService.createBookReview(bookId, reviewData);
+  const result = await BookService.createBookReview(
+    userData,
+    bookId,
+    reviewData
+  );
   responseReturn<IBook | null>(res, {
     statusCode: httpStatus.OK,
     success: true,

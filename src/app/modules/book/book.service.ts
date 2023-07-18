@@ -90,7 +90,7 @@ const updateBook = async (
   user: JwtPayload,
   payload: Partial<IBook>
 ): Promise<IBook | null> => {
-  const isUserExit = await User.isUserExit(user.email);
+  const isUserExit = await User.findById({ _id: user?.userId });
 
   if (!isUserExit) {
     throw new ApiError(httpStatus.NOT_FOUND, 'You are authorized user!');
@@ -108,13 +108,33 @@ const updateBook = async (
   return result;
 };
 
-const deleteBook = async (id: string): Promise<IBook | null> => {
-  const result = await Book.findByIdAndDelete({ _id: id });
+const deleteBook = async (
+  user: JwtPayload,
+  id: string
+): Promise<IBook | null> => {
+  const isUserExit = await User.findById({ _id: user?.userId });
+
+  if (!isUserExit) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'You are authorized user!');
+  }
+  const result = await Book.findOneAndDelete({
+    $and: [{ _id: id }, { 'author.authorId': user?.userId }],
+  });
   return result;
 };
 
 /* Comment Service Start */
-const createBookReview = async (id: string, data: IReview) => {
+const createBookReview = async (
+  user: JwtPayload,
+  id: string,
+  data: IReview
+) => {
+  const isUserExit = await User.findById({ _id: user?.userId });
+
+  if (!isUserExit) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'You are authorized user!');
+  }
+
   const result = await Book.findOneAndUpdate(
     { _id: id },
     {
