@@ -10,7 +10,7 @@ import { ILoginUserResponse } from '../../../interfaces/common';
 
 const createUser = async (user: IUser): Promise<ILoginUserResponse | null> => {
   // check user already exit, if exit return error
-  const isUserExit = await User.findOne({email: user?.email});
+  const isUserExit = await User.findOne({ email: user?.email });
   if (isUserExit) {
     throw new ApiError(httpStatus.CONFLICT, 'User already exit!');
   }
@@ -24,8 +24,9 @@ const createUser = async (user: IUser): Promise<ILoginUserResponse | null> => {
 
   const accessToken = jwtHelpers.createToken(
     {
-      userId: result._id,
+      name: result.name,
       email: result.email,
+      userId: result._id,
       role: result.role,
     },
     config.jwt_secret as Secret,
@@ -40,11 +41,11 @@ const loginUser = async (user: IUser): Promise<ILoginUserResponse> => {
   const { password, email } = user;
 
   // check user already exit, if exit return error
-  const isUserExit = await User.isUserExit(email);
+  const isUserExit = await User.findOne({ email: email }).select('+password');
+
   if (!isUserExit) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exit!');
   }
-
   //compare the password
   const isPasswordMatch = await User.isPasswordMatched(
     isUserExit.password,
@@ -57,9 +58,10 @@ const loginUser = async (user: IUser): Promise<ILoginUserResponse> => {
 
   const accessToken = jwtHelpers.createToken(
     {
-      userId: isUserExit._id,
+      name: isUserExit.name,
       email: isUserExit.email,
       role: isUserExit.role,
+      userId: isUserExit._id,
     },
     config.jwt_secret as Secret,
     config.jwt_expire_in as string

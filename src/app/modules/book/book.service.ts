@@ -36,6 +36,7 @@ const getAllBooks = async (
   const addCondition = [];
 
   // for searchable filters
+
   if (searchTerm) {
     addCondition.push({
       $or: bookSearchableFields.map(field => ({

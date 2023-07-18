@@ -3,9 +3,12 @@ import { IUser } from '../user/user.interface';
 
 export type IBook = {
   title: string;
-  image:string;
+  image: string;
   genre: string;
-  author: Types.ObjectId | IUser;
+  author: {
+    name: string;
+    authorId: Types.ObjectId | IUser;
+  };
   publicationDate?: Date;
   reviews: {
     name: string;
