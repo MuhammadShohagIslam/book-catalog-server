@@ -63,7 +63,7 @@ const getAllBooks = async (
   const whereCondition = addCondition.length > 0 ? { $and: addCondition } : {};
 
   const result = await Book.find(whereCondition)
-    .populate('author')
+    .populate('user')
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);
@@ -81,7 +81,7 @@ const getAllBooks = async (
 };
 
 const getSingleBook = async (data: string): Promise<IBook | null> => {
-  const result = await Book.findById({ _id: data }).populate('author');
+  const result = await Book.findById({ _id: data }).populate('user');
   return result;
 };
 
@@ -118,7 +118,7 @@ const deleteBook = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'You are authorized user!');
   }
   const result = await Book.findOneAndDelete({
-    $and: [{ _id: id }, { 'author.authorId': user?.userId }],
+    $and: [{ _id: id }, { 'user': user?.userId }],
   });
   return result;
 };

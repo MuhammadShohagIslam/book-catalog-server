@@ -20,16 +20,15 @@ const bookSchema = new Schema<IBook, BookModel>(
       required: true,
     },
     author: {
-      name: {
-        type: String,
-        required: true,
-      },
-      authorId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'User',
-      },
+      type: String,
+      required: true,
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
+
     reviews: [
       {
         name: {

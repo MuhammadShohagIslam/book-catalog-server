@@ -5,10 +5,8 @@ export type IBook = {
   title: string;
   image: string;
   genre: string;
-  author: {
-    name: string;
-    authorId: Types.ObjectId | IUser;
-  };
+  author: string;
+  user: Types.ObjectId | IUser;
   publicationDate?: Date;
   reviews: {
     name: string;

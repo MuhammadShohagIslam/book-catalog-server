@@ -27,7 +27,13 @@ router
   .delete(auth(ENUM_USER_ROLE.USER), BookController.deleteBook);
 
 // Review Routers
-router.post('/reviews', BookController.createBookReview);
-router.route('/reviews/:id').delete(BookController.deleteBookReview);
+router.post(
+  '/reviews',
+  auth(ENUM_USER_ROLE.USER),
+  BookController.createBookReview
+);
+router
+  .route('/reviews/:id')
+  .delete(auth(ENUM_USER_ROLE.USER), BookController.deleteBookReview);
 
 export const BookRoutes = router;
