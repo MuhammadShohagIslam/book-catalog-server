@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import bcrypt from 'bcrypt';
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import { userRoleFields } from '../../../constants/user';
 import config from '../../../config';
@@ -18,13 +18,37 @@ const userSchema = new Schema<IUser, UserModel>(
     password: {
       type: String,
       required: true,
-      select: 0
+      select: 0,
     },
     role: {
       type: String,
       enum: userRoleFields,
       default: 'user',
     },
+    completedReadBook: [
+      {
+        bookId: {
+          type: Types.ObjectId,
+          ref: 'Book',
+        },
+      },
+    ],
+    wishList: [
+      {
+        bookId: {
+          type: Types.ObjectId,
+          ref: 'Book',
+        },
+      },
+    ],
+    readSoonBook: [
+      {
+        bookId: {
+          type: Types.ObjectId,
+          ref: 'Book',
+        },
+      },
+    ],
   },
   {
     timestamps: true,

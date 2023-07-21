@@ -74,8 +74,135 @@ const loginUser = async (user: IUser): Promise<ILoginUserResponse> => {
 
 const getUser = async (user: JwtPayload): Promise<IUser | null> => {
   const { userId } = user;
-  const result = await User.findById({ _id: userId }, { password: 0 });
+  const result = await User.findById({ _id: userId }, { password: 0 })
+    .populate('wishList.bookId')
+    .populate('readSoonBook.bookId')
+    .populate('completedReadBook.bookId');
 
+  return result;
+};
+
+const addWishListBook = async (user: JwtPayload, id: string) => {
+  const isUserExit = await User.findById({ _id: user?.userId });
+
+  if (!isUserExit) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'You are authorized user!');
+  }
+
+  const result = await User.findOneAndUpdate(
+    { _id: user?.userId },
+    {
+      $push: {
+        wishList: {
+          bookId: id,
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return result;
+};
+
+const deleteBookFromWishlist = async (id: string, wishListId: string) => {
+  const result = await User.findOneAndUpdate(
+    { $and: [{ 'wishList._id': wishListId }, { _id: id }] },
+    {
+      $pull: {
+        wishList: {
+          _id: id,
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return result;
+};
+const addReadSoonBookBook = async (
+  user: JwtPayload,
+  bookId: string,
+) => {
+  const isUserExit = await User.findById({ _id: user?.userId });
+
+  if (!isUserExit) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'You are authorized user!');
+  }
+
+  const result = await User.findOneAndUpdate(
+    { _id: user?.userId },
+    {
+      $push: {
+        readSoonBook: {
+          bookId: bookId,
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return result;
+};
+
+const deleteBookFromReadSoonBook = async (id: string) => {
+  const result = await User.findOneAndUpdate(
+    { 'readSoonBook._id': id },
+    {
+      $pull: {
+        readSoonBook: {
+          _id: id,
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return result;
+};
+const addCompleteReadSoonBookBook = async (
+  user: JwtPayload,
+  bookId: string,
+) => {
+  const isUserExit = await User.findById({ _id: user?.userId });
+
+  if (!isUserExit) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'You are authorized user!');
+  }
+
+  const result = await User.findOneAndUpdate(
+    { _id: user?.userId },
+    {
+      $push: {
+        readSoonBook: {
+          bookId: bookId,
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  return result;
+};
+
+const deleteBookFromCompleteReadSoonBookBook = async (id: string) => {
+  const result = await User.findOneAndUpdate(
+    { 'completedReadBook._id': id },
+    {
+      $pull: {
+        completedReadBook: {
+          _id: id,
+        },
+      },
+    },
+    {
+      new: true,
+    }
+  );
   return result;
 };
 
@@ -83,4 +210,10 @@ export const AuthService = {
   createUser,
   loginUser,
   getUser,
+  addWishListBook,
+  deleteBookFromWishlist,
+  addReadSoonBookBook,
+  deleteBookFromReadSoonBook,
+  deleteBookFromCompleteReadSoonBookBook,
+  addCompleteReadSoonBookBook,
 };

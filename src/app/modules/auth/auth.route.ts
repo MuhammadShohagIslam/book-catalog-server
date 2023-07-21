@@ -21,4 +21,37 @@ router.post(
 
 router.get('/get-user', auth(ENUM_USER_ROLE.USER), AuthUserController.getUser);
 
+router.post(
+  '/wishlist',
+  auth(ENUM_USER_ROLE.USER),
+  AuthUserController.addWishListBook
+);
+router
+  .route('/wishlist/:id')
+  .delete(auth(ENUM_USER_ROLE.USER), AuthUserController.deleteBookFromWishlist);
+
+router.post(
+  '/reading-soon',
+  auth(ENUM_USER_ROLE.USER),
+  AuthUserController.addReadSoonBookBook
+);
+router
+  .route('/reading-soon/:id')
+  .delete(
+    auth(ENUM_USER_ROLE.USER),
+    AuthUserController.deleteBookFromReadSoonBook
+  );
+
+router.post(
+  '/read-completed',
+  auth(ENUM_USER_ROLE.USER),
+  AuthUserController.addCompleteReadSoonBookBook
+);
+router
+  .route('/read-completed/:id')
+  .delete(
+    auth(ENUM_USER_ROLE.USER),
+    AuthUserController.deleteBookFromCompleteReadSoonBookBook
+  );
+
 export const AuthRoutes = router;

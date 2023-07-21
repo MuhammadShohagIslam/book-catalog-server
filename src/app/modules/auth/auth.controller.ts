@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, RequestHandler, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
@@ -50,8 +51,102 @@ const getUser: RequestHandler = catchAsync(
   }
 );
 
+const addWishListBook = catchAsync(async (req: Request, res: Response) => {
+  const userData = req.user as JwtPayload;
+  const { bookId } = req.body;
+  const result = await AuthService.addWishListBook(
+    userData,
+    bookId,
+  );
+  responseReturn<IUser | null | any>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Add Wish List Book successfully!',
+    data: result,
+  });
+});
+
+const deleteBookFromWishlist = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const { wishListId } = req.body;
+
+    const result = await AuthService.deleteBookFromWishlist(id, wishListId);
+    responseReturn<IUser | null | any>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Add Wish List Book deleted successfully!',
+      data: result,
+    });
+  }
+);
+
+const addReadSoonBookBook = catchAsync(async (req: Request, res: Response) => {
+  const userData = req.user as JwtPayload;
+  const { bookId } = req.body;
+  const result = await AuthService.addReadSoonBookBook(
+    userData,
+    bookId
+  );
+  responseReturn<IUser | null | any>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Add Read Soon Book successfully!',
+    data: result,
+  });
+});
+
+const deleteBookFromReadSoonBook = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await AuthService.deleteBookFromReadSoonBook(id);
+    responseReturn<IUser | null | any>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Add Read Soon Book deleted successfully!',
+      data: result,
+    });
+  }
+);
+
+const addCompleteReadSoonBookBook = catchAsync(
+  async (req: Request, res: Response) => {
+    const userData = req.user as JwtPayload;
+    const { bookId } = req.body;
+    const result = await AuthService.addCompleteReadSoonBookBook(
+      userData,
+      bookId,
+    );
+    responseReturn<IUser | null | any>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Add Complete Read Soon Book successfully!',
+      data: result,
+    });
+  }
+);
+
+const deleteBookFromCompleteReadSoonBookBook = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await AuthService.deleteBookFromCompleteReadSoonBookBook(id);
+    responseReturn<IUser | null | any>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Delete complete Read Soon Book successfully!',
+      data: result,
+    });
+  }
+);
+
 export const AuthUserController = {
   createUser,
   loginUser,
-  getUser
+  getUser,
+  addWishListBook,
+  deleteBookFromWishlist,
+  addReadSoonBookBook,
+  deleteBookFromReadSoonBook,
+  addCompleteReadSoonBookBook,
+  deleteBookFromCompleteReadSoonBookBook,
 };
