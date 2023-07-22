@@ -39,7 +39,6 @@ const loginUser: RequestHandler = catchAsync(
 const getUser: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { ...userData } = req.user as JwtPayload;
-
     const result = await AuthService.getUser(userData);
 
     responseReturn<IUser | null>(res, {
@@ -54,10 +53,7 @@ const getUser: RequestHandler = catchAsync(
 const addWishListBook = catchAsync(async (req: Request, res: Response) => {
   const userData = req.user as JwtPayload;
   const { bookId } = req.body;
-  const result = await AuthService.addWishListBook(
-    userData,
-    bookId,
-  );
+  const result = await AuthService.addWishListBook(userData, bookId);
   responseReturn<IUser | null | any>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -68,14 +64,17 @@ const addWishListBook = catchAsync(async (req: Request, res: Response) => {
 
 const deleteBookFromWishlist = catchAsync(
   async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const { wishListId } = req.body;
+    const userData = req.user as JwtPayload;
+    const { bookId } = req.body;
 
-    const result = await AuthService.deleteBookFromWishlist(id, wishListId);
+    const result = await AuthService.deleteBookFromWishlist(
+      userData,
+      bookId
+    );
     responseReturn<IUser | null | any>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Add Wish List Book deleted successfully!',
+      message: ' Wish List Book deleted successfully!',
       data: result,
     });
   }
@@ -84,10 +83,7 @@ const deleteBookFromWishlist = catchAsync(
 const addReadSoonBookBook = catchAsync(async (req: Request, res: Response) => {
   const userData = req.user as JwtPayload;
   const { bookId } = req.body;
-  const result = await AuthService.addReadSoonBookBook(
-    userData,
-    bookId
-  );
+  const result = await AuthService.addReadSoonBookBook(userData, bookId);
   responseReturn<IUser | null | any>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -98,8 +94,12 @@ const addReadSoonBookBook = catchAsync(async (req: Request, res: Response) => {
 
 const deleteBookFromReadSoonBook = catchAsync(
   async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const result = await AuthService.deleteBookFromReadSoonBook(id);
+    const userData = req.user as JwtPayload;
+    const { bookId } = req.body;
+    const result = await AuthService.deleteBookFromReadSoonBook(
+      userData,
+      bookId
+    );
     responseReturn<IUser | null | any>(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -115,7 +115,7 @@ const addCompleteReadSoonBookBook = catchAsync(
     const { bookId } = req.body;
     const result = await AuthService.addCompleteReadSoonBookBook(
       userData,
-      bookId,
+      bookId
     );
     responseReturn<IUser | null | any>(res, {
       statusCode: httpStatus.OK,
@@ -128,8 +128,10 @@ const addCompleteReadSoonBookBook = catchAsync(
 
 const deleteBookFromCompleteReadSoonBookBook = catchAsync(
   async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const result = await AuthService.deleteBookFromCompleteReadSoonBookBook(id);
+    const userData = req.user as JwtPayload;
+    const { bookId } = req.body;
+
+    const result = await AuthService.deleteBookFromCompleteReadSoonBookBook(userData, bookId);
     responseReturn<IUser | null | any>(res, {
       statusCode: httpStatus.OK,
       success: true,
