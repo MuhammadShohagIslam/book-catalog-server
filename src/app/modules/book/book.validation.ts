@@ -31,13 +31,9 @@ const updateBookZodSchema = z.object({
   body: z.object({
     title: z.string().optional(),
     genre: z.string().optional(),
-    author: z
-      .object({
-        name: z.string().optional(),
-        authorId: z.string().optional(),
-      })
-      .optional(),
+    author: z.string().optional(),
     publicationDate: z.string().optional(),
+    user: z.string().optional(),
     reviews: z
       .object({
         name: z.string().optional(),
