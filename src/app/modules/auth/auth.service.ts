@@ -206,7 +206,7 @@ const addCompleteReadSoonBookBook = async (
     { _id: user?.userId },
     {
       $push: {
-        readSoonBook: {
+        completedReadBook: {
           bookId: bookId,
         },
       },
